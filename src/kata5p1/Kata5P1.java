@@ -5,7 +5,7 @@ public class Kata5P1 {
 
     public static void main(String[] args) throws SQLException {
         connect();
-        
+        createNewTable();
     }
     
     private static Connection connect() {
@@ -29,7 +29,7 @@ public class Kata5P1 {
         return conn;
     }
     
-     private static void selectAll(Connection conn){
+    private static void selectAll(Connection conn){
         String sql = "SELECT * FROM PEOPLE";
         try {
         Statement stmt = conn.createStatement();
@@ -43,5 +43,19 @@ public class Kata5P1 {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+    }
+    
+    public static void createNewTable(){
+        String url= "jdbc:sqlite:Kata5.db";
+        String sql = "CREATE TABLE IF NOT EXISTS direcc_email (\n"
+                + " id integer PRIMARY KEY AUTOINCREMENT,\n"
+                + " direccion text NOT NULL);";
+        try (Connection conn = DriverManager.getConnection(url);
+            Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("Tabla creada");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } 
     }
 }
