@@ -1,11 +1,27 @@
 package kata5p1;
 import java.sql.*;
+import java.util.List;
 
 public class Kata5P1 {
 
     public static void main(String[] args) throws SQLException {
         connect();
         createNewTable();
+        
+        String fichero = "email.txt";
+        List<String> lista = new MailListReader().read(fichero);
+
+        String url = "jdbc:sqlite:Kata5.db";
+        String sql= "INSERT INTO direcc_email(direccion) VALUES(?)";
+        try (Connection conn = DriverManager.getConnection(url) ;
+            PreparedStatement pstmt= conn.prepareStatement(sql)) {
+            for (String list: lista) {
+                pstmt.setString(1, list);
+                pstmt.executeUpdate();
+            }
+        } catch(SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
     
     private static Connection connect() {
